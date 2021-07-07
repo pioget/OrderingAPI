@@ -80,4 +80,26 @@ namespace OrderingAPI.Models.DTO
         }
         
     }
+
+    public class rfCustomerDTO 
+    {
+        public int customerID { get; private set; }
+        public string Title { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string EmailAddress { get; private set; }
+        public string MobileNumber { get; private set; }
+
+        public rfCustomerDTO(Customer customer)
+        {
+            customerID = customer.CustomerId;
+            Title = customer.Title;
+            FirstName = customer.FirstName;
+            LastName = customer.LastName;
+            EmailAddress = customer.EmailAddress;
+            MobileNumber = customer.MobileNumber;
+       
+        }
+
+    }
 }

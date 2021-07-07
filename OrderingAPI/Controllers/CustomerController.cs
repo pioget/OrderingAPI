@@ -64,10 +64,39 @@ namespace OrderingAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getCustomers")]
+        public async Task<List<Models.DTO.rfCustomerDTO>> GetCustomers()
+        {
+            try
+            {
+                List<Customer> customers = await _CustomerService.getAllCustomers();
+
+                List<Models.DTO.rfCustomerDTO> dtocustomer = new List<Models.DTO.rfCustomerDTO>();
+                foreach (Customer c in customers)
+                {
+                    dtocustomer.Add(createflatreturnobject(c));
+                }
+
+                return dtocustomer;
+            }
+            catch (Exception ex)
+            {
+                //_errorLogger.Log(ex);
+                return null;//InternalServerError(ex);
+            }
+        }
+
 
         private rCustomerDTO createreturnobject(Customer customer)
         {
             rCustomerDTO rdtocustomer = new rCustomerDTO(customer);
+
+            return rdtocustomer;
+        }
+        private rfCustomerDTO createflatreturnobject(Customer customer)
+        {
+            rfCustomerDTO rdtocustomer = new rfCustomerDTO(customer);
 
             return rdtocustomer;
         }

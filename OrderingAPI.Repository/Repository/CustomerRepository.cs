@@ -28,7 +28,10 @@ namespace OrderingAPI.Repository.Repository
 
         public List<DBCustomer> getAllObjects()
         {
-            throw new NotImplementedException();
+            List<DBCustomer> customers = _context.customers.ToList();
+
+
+            return customers;
         }
 
         public DBCustomer getObject(int id)

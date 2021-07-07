@@ -59,6 +59,35 @@ namespace OrderingAPI.AppService.Services
         {
             _customerReposotory.saveChanges();
         }
+
+        public async Task<List<Customer>> getAllCustomers()
+        {
+            try
+            {
+                List<Customer> formattedlist = new List<Customer>();
+                List<DBCustomer> dbcustomer = _customerReposotory.getAllObjects();
+
+
+
+                foreach (DBCustomer customer in dbcustomer)
+                {
+                    formattedlist.Add(new Customer(customer));
+                }
+
+                return formattedlist;
+
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                //_errorLogger.Log(ex);
+                return null;//InternalServerError(ex);
+            }
+        }
+
         private List<CustomerAddress> getAddresses(int customerID)
         {
      
@@ -82,6 +111,8 @@ namespace OrderingAPI.AppService.Services
 
             return customeraddress;
         }
+
+
 
     }
 }
