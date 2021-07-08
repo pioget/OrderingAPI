@@ -73,5 +73,10 @@ namespace OrderingAPI.AppService.Services
 
             return stock;
         }
+
+        //public async Task<bool> changestocklevel(Stock)
+        //{
+
+        //}
     }
 }

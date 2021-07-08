@@ -88,6 +88,7 @@ namespace OrderingAPI.AppService.Services
 
             await _orderLineService.addStockItem(order.OrderLines);
 
+            
             order = _orderRepositry._repository.addObject(order);
             _orderRepositry.Commit();
 

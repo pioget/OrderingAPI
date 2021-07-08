@@ -32,6 +32,26 @@ namespace OrderingAPI.Repository.EFObjects
         public decimal Price { get; private set; }
         public DateTime DateCreated { get; private set; }
         public bool IsActive { get; private set; }
-        public DateTime DateDeactivated { get; private set; }
+        public DateTime? DateDeactivated { get; private set; }
+
+        public bool hasstockavailable(int quantity)
+        {
+            if(quantity<= StockQuantity)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool changestocklevel(int quantity)
+        {
+            bool hasstock = hasstockavailable(quantity);
+
+            if(hasstock)
+            {
+                StockQuantity = StockQuantity = quantity;
+            }
+            return hasstock;
+        }
     }
 }

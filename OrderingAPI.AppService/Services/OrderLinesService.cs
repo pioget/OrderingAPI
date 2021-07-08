@@ -61,8 +61,17 @@ namespace OrderingAPI.AppService.Services
 
             foreach (OrderLines ol in OrderLines)
             {
+
                 Stock stock = await _stockService.getStockbyID(ol.StockID);
+
                 ol.setStockItem(stock);
+
+                bool success = ol.hasstockavailable();
+                if (!success)
+                    throw new Exception("Stock Not Available for " + ol.stockName);
+
+                    
+
             }
 
             return OrderLines;

@@ -27,7 +27,7 @@ namespace OrderingAPI.Repository.EFObjects
         public decimal SIValue { get; private set; }
         public DateTime DateCreated { get; private set; }
         public bool IsActive { get; private set; }
-        public DateTime DateDeactivated { get; private set; }
+        public DateTime? DateDeactivated { get; private set; }
 
         private  Stock stock { get; set; }
 
@@ -36,6 +36,13 @@ namespace OrderingAPI.Repository.EFObjects
             this.stock = stock;
             this.SIValue = stock.Price;
         }
+
+        public bool hasstockavailable()
+        {
+            return stock.changestocklevel(Quantity);
+        }
+
+
 
     }
 
