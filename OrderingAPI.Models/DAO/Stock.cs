@@ -4,33 +4,33 @@ using System.Text;
 
 namespace OrderingAPI.Models.DAO
 {
-    public class Stock
+    public class StockDAO
     {
 
-        public Stock(DBObjects.DBStock stock)
-        {
+    //    public Stock(DBObjects.DBStock stock)
+    //    {
 
-            StockID = stock.StockID;
-            ItemDescritpion = stock.ItemDescritpion;
-            SKUcode = stock.SKUcode;
-            StockQuantity = stock.StockQuantity;
-            Price = stock.Price;
-            DateCreated = stock.DateCreated;
-            IsActive = stock.IsActive;
-            DateDeactivated = stock.DateDeactivated;
-    }
+    //        StockID = stock.StockID;
+    //        ItemDescritpion = stock.ItemDescritpion;
+    //        SKUcode = stock.SKUcode;
+    //        StockQuantity = stock.StockQuantity;
+    //        Price = stock.Price;
+    //        DateCreated = stock.DateCreated;
+    //        IsActive = stock.IsActive;
+    //        DateDeactivated = stock.DateDeactivated;
+    //}
 
-        public Stock(DTO.StockDTO stock)
-        {
+        //public StockDAO(DTO.StockDTO stock)
+        //{
 
  
-            ItemDescritpion = stock.ItemDescritpion;
-            SKUcode = stock.SKUcode;
-            StockQuantity = stock.StockQuantity;
-            Price = stock.Price;
-            DateCreated = DateTime.Now;
-            IsActive = true;
-        }
+        //    ItemDescritpion = stock.ItemDescritpion;
+        //    SKUcode = stock.SKUcode;
+        //    StockQuantity = stock.StockQuantity;
+        //    Price = stock.Price;
+        //    DateCreated = DateTime.Now;
+        //    IsActive = true;
+        //}
         public int StockID { get; private set; }
         public string ItemDescritpion { get; private set; }
         public string SKUcode { get; private set; }

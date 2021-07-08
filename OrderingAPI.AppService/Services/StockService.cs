@@ -1,6 +1,8 @@
-﻿using OrderingAPI.Models.DAO;
-using OrderingAPI.Models.DBObjects;
-using OrderingAPI.Repository.Repository;
+﻿
+using OrderingAPI.Models.DTO;
+using OrderingAPI.Repository.EFObjects;
+using OrderingAPI.Repository.Interfaces;
+using OrderingAPI.Repository.LocalRepoistory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,26 +12,27 @@ namespace OrderingAPI.AppService.Services
 {
     public class StockService
     {
-        private readonly IRepository<DBStock> _stockReposotory;
+       // private readonly IRepository<Stock> _stockReposotory;
+        private readonly IUnitOfWork<Stock> _stockReposotory;
 
-        public StockService(IRepository<DBStock> stockReposotory)
+        public StockService(IUnitOfWork<Stock> stockReposotory)
         {
 
             _stockReposotory = stockReposotory;
         }
 
-        public async Task<List<Stock>> getStock()
+        public async Task<List<rStockDTO>> getStock()
         {
             try
             {
-                List<Stock> formattedlist = new List<Stock>();
-                List<DBStock> dbstock =  _stockReposotory.getAllObjects();
+                List<rStockDTO> formattedlist = new List<rStockDTO>();
+                List<Stock> dbstock =  _stockReposotory._repository.getAllObjects();
 
-           
 
-                foreach (DBStock stock in dbstock)
+
+                foreach (Stock stock in dbstock)
                 {
-                    formattedlist.Add(new Stock(stock));
+                    formattedlist.Add(new rStockDTO(stock.StockID,stock.ItemDescritpion,stock.SKUcode,stock.StockQuantity,stock.Price));
                 }
 
                 return formattedlist;
@@ -46,31 +49,29 @@ namespace OrderingAPI.AppService.Services
             }
         }
 
-        public async Task<Stock> addStock(Stock stock)
+        public async Task<int> addStock(StockDTO stock)
         {
         
-                DBStock dbstock = new DBStock(stock);
+                Stock dbstock = new Stock(stock);
 
-                dbstock =  _stockReposotory.addObject(dbstock);
+                dbstock =  _stockReposotory._repository.addObject(dbstock);
+            _stockReposotory.Commit();
+                ////stock = new StockDAO(dbstock);
 
-                stock = new Stock(dbstock);
-
-                return stock;
-
+                return dbstock.StockID;
      
+
         }
 
         public async Task<Stock> getStockbyID(int stockID)
         {
-          
-                DBStock dbstock = _stockReposotory.getObject(stockID);
-                if (dbstock == null)
-                    throw new Exception("Stock Record not found");
 
-                Stock stock = new Stock(dbstock);
+            Stock stock = _stockReposotory._repository.getObject(stockID);
 
-               return stock;
-         
+            if (stock == null)
+                throw new Exception("Stock Record not found");
+
+            return stock;
         }
     }
 }

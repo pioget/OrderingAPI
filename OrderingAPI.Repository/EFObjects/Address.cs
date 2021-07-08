@@ -2,36 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OrderingAPI.Models.DAO
+namespace OrderingAPI.Repository.EFObjects
 {
-    public class CustomerAddressDAO
+    public class Address
     {
 
-
-   
-
-    //    public CustomerAddress(DBObjects.DBCustomerAddress address)
-    //    {
-
-    //        CustomerAdressID = address.CustomerAdressID;
-    //        CustomerID = address.CustomerID;
-    //        AddressTypeID = address.AddressTypeID;
-    //        Address1 = address.Address1;
-    //        Address2 = address.Address2;
-    //        Town = address.Town;
-    //        Postcode = address.Postcode;
-    //        IsActive = address.IsActive;
-    //        DateCreated = address.DateCreated;
-    //        DateDeactivated = address.DateDeactivated;
-
-    //}
-
-        public CustomerAddressDAO(Models.DTO.CustomerAddressDTO customeraddress)
+        private Address()
         {
 
+        }
 
-         
-           
+        public Address(Models.DTO.CustomerAddressDTO customeraddress)
+        {
             AddressTypeID = customeraddress.AddressTypeID;
             Address1 = customeraddress.Address1;
             Address2 = customeraddress.Address2;
@@ -43,8 +25,7 @@ namespace OrderingAPI.Models.DAO
 
         }
 
-
-        public int CustomerAdressID { get; private set; }
+        public int AddressID { get; private set; }
         public int CustomerID { get; private set; }
         public int AddressTypeID { get; private set; }
         public string Address1 { get; private set; }
@@ -54,11 +35,5 @@ namespace OrderingAPI.Models.DAO
         public bool IsActive { get; private set; }
         public DateTime DateCreated { get; private set; }
         public DateTime? DateDeactivated { get; private set; }
-
-        public void setCustomerID(int customerID)
-        {
-            CustomerID = customerID;
-        }
-
     }
 }

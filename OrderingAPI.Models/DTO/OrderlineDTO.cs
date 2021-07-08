@@ -1,4 +1,4 @@
-﻿using OrderingAPI.Models.DAO;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,19 +29,20 @@ namespace OrderingAPI.Models.DTO
 
     public class rOrderlineDTO : IAddOrderLineDTO
     {
-        public rOrderlineDTO(OrderLines orderline)
+        public rOrderlineDTO(int OrderLinesID, int StockID,int Quantity,string StockName,decimal SIVaule, decimal OrderLineValue)
         {
-            orderLineID = orderline.OrderLinesID;
-            StockID = orderline.StockID;
-            Quantity = orderline.Quantity;
-            stockName = orderline.stockName;
-            SIValue = orderline.SIValue;
-            OrderLineValue = orderline.OrderLineValue;
+            
+            this.StockID = StockID;
+            this.Quantity = Quantity;
+            this.stockName = StockName;
+            this.SIValue = SIVaule;
+            this.OrderLineValue = OrderLineValue;
         }
+
         public int StockID { get; private set; }
         public int Quantity { get; private set; }
 
-        public int orderLineID { get; private set; }
+        public int OrderLinesID { get; private set; }
         public string stockName { get; private set; }
         public decimal SIValue { get; private set; }
         public decimal OrderLineValue { get; private set; }

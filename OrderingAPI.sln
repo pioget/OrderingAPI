@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingAPI.AppService", "O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingAPI.Repository", "OrderingAPI.Repository\OrderingAPI.Repository.csproj", "{51163413-CD72-4D52-A37F-5C3892B2B760}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB", "DB\DB.csproj", "{AF299CBA-0A4F-433B-8839-0CC7BD710743}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{51163413-CD72-4D52-A37F-5C3892B2B760}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51163413-CD72-4D52-A37F-5C3892B2B760}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51163413-CD72-4D52-A37F-5C3892B2B760}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF299CBA-0A4F-433B-8839-0CC7BD710743}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF299CBA-0A4F-433B-8839-0CC7BD710743}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF299CBA-0A4F-433B-8839-0CC7BD710743}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF299CBA-0A4F-433B-8839-0CC7BD710743}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

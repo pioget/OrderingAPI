@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Database.context;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,9 +15,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OrderingAPI.AppService.Services;
-using OrderingAPI.Repository.Repository;
-using OrderingAPI.Models.DBObjects;
-using OrderingAPI.Models.DAO;
+
+using OrderingAPI.Repository.Interfaces;
+using OrderingAPI.Repository.LocalRepoistory;
+
 
 namespace OrderingAPI
 {
@@ -44,29 +45,53 @@ namespace OrderingAPI
                 });
             });
 
-            services.AddDbContext<CustomerDbContext>(options => options.UseInMemoryDatabase(databaseName: "Customers"));
-            services.AddDbContext<customerAddressDbContext>(options => options.UseInMemoryDatabase(databaseName: "CustomerAddress"));
-            services.AddDbContext<OrderDbContext>(options => options.UseInMemoryDatabase(databaseName: "Orders"));
-            services.AddDbContext<OrderLinesDbContext>(options => options.UseInMemoryDatabase(databaseName: "OrderLines"));
-            services.AddDbContext<StockDbContext>(options => options.UseInMemoryDatabase(databaseName: "Stock"));
+            //services.AddDbContext<CustomerDbContext>(options => options.UseInMemoryDatabase(databaseName: "Customers"));
+            //services.AddDbContext<customerAddressDbContext>(options => options.UseInMemoryDatabase(databaseName: "CustomerAddress"));
+            //services.AddDbContext<OrderDbContext>(options => options.UseInMemoryDatabase(databaseName: "Orders"));
+            //services.AddDbContext<OrderLinesDbContext>(options => options.UseInMemoryDatabase(databaseName: "OrderLines"));
+            //services.AddDbContext<StockDbContext>(options => options.UseInMemoryDatabase(databaseName: "Stock"));
+
+            //services.AddDbContext<Models.EFObjects.OrderDBContext>();
+
+            services.AddDbContext<Repository.EFObjects.OrderDBContext>(options =>
+options.UseSqlServer("Data Source=(localdb)\\NewInstance;Initial Catalog=OrderingAPI;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
+
+            //services.AddScoped<IRepository<DBCustomer>, CustomerRepository>();
+            //services.AddScoped<IRepository<DBCustomerAddress>, CustomerAddressRepositry>();
+            //services.AddScoped<IRepository<DBOrder>, OrderRepositry>();
+            //services.AddScoped<IRepository<DBOrderLines>, OrderLinesRepositry>();
+            //services.AddScoped<IRepository<DBStock>, StockRepositry>();
+
+            services.AddScoped<IRepository<Repository.EFObjects.Customer>, Repository.LocalRepoistory.CustomerRepository>();
+            services.AddScoped<IRepository<Repository.EFObjects.Address>, Repository.LocalRepoistory.CustomerAddressRepository>();
+            services.AddScoped<IRepository<Repository.EFObjects.Order>, Repository.LocalRepoistory.OrderRepository>();
+            services.AddScoped<IRepository<Repository.EFObjects.OrderLines>, Repository.LocalRepoistory.OrderLineRepository>();
+            services.AddScoped<IRepository<Repository.EFObjects.Stock>, Repository.LocalRepoistory.StockRepository>();
 
 
+            services.AddScoped<IUnitOfWork<Repository.EFObjects.Customer>, UnitOfWork<Repository.EFObjects.Customer>>();
+            services.AddScoped<IUnitOfWork<Repository.EFObjects.Address>, UnitOfWork<Repository.EFObjects.Address>>();
+            services.AddScoped<IUnitOfWork<Repository.EFObjects.Order>, UnitOfWork<Repository.EFObjects.Order>>();
+            services.AddScoped<IUnitOfWork<Repository.EFObjects.OrderLines>, UnitOfWork<Repository.EFObjects.OrderLines>>();
+            services.AddScoped<IUnitOfWork<Repository.EFObjects.Stock>, UnitOfWork<Repository.EFObjects.Stock>>();
 
-            services.AddScoped<IRepository<DBCustomer>, CustomerRepository>();
-            services.AddScoped<IRepository<DBCustomerAddress>, CustomerAddressRepositry>();
-            services.AddScoped<IRepository<DBOrder>, OrderRepositry>();
-            services.AddScoped<IRepository<DBOrderLines>, OrderLinesRepositry>();
-            services.AddScoped<IRepository<DBStock>, StockRepositry>();
+        
+
 
             services.AddTransient<CustomerService>();
             services.AddTransient<StockService>();
             services.AddTransient<OrderService>();
             services.AddTransient<OrderLinesService>();
             services.AddTransient<CustomerAddressService>();
+            services.AddTransient<CustomerService>();
+
+
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Repository.EFObjects.OrderDBContext db)
         {
             if (env.IsDevelopment())
             {
@@ -76,7 +101,7 @@ namespace OrderingAPI
             {
                 app.UseHsts();
             }
-
+            db.Database.EnsureCreated();
 
             var cultureInfo = new CultureInfo("en-GB");
             cultureInfo.NumberFormat.CurrencySymbol = "£";

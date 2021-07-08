@@ -1,7 +1,8 @@
-﻿using OrderingAPI.Models.DAO;
-using OrderingAPI.Models.DBObjects;
+﻿
 using OrderingAPI.Models.DTO;
-using OrderingAPI.Repository.Repository;
+using OrderingAPI.Repository.EFObjects;
+using OrderingAPI.Repository.Interfaces;
+using OrderingAPI.Repository.LocalRepoistory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,74 +12,85 @@ namespace OrderingAPI.AppService.Services
 {
     public class CustomerService
     {
-        private readonly IRepository<DBCustomer> _customerReposotory;
+        //private readonly IRepository<Customer> _customerReposotory;
+        private readonly IUnitOfWork<Customer> _customerReposotory;
         private readonly CustomerAddressService _customerAddressService;
-        public CustomerService(IRepository<DBCustomer> customerReposotory, CustomerAddressService customerAddressService)
+        public CustomerService(IUnitOfWork<Customer> customerReposotory, CustomerAddressService customerAddressService)
         {
 
             _customerReposotory = customerReposotory;
             _customerAddressService = customerAddressService;
         }
 
-        public async Task<Customer> getCustomer(int customerID)
+        public async Task<rCustomerDTO> getCustomer(int customerID)
         {
 
-            DBCustomer dbcustomer = _customerReposotory.getObject(customerID);
+            Customer dbcustomer = _customerReposotory._repository.getObject(customerID);
 
             if (dbcustomer == null)
                 throw new Exception("Customer Record not found");
 
-            Customer customer = new Customer(dbcustomer);
+            List<rCustomerAddressCTO> address = _customerAddressService.getaddressinfo(customerID);
 
-            customer.addAddress(getAddresses(customer.CustomerId));
+            rCustomerDTO customer = new rCustomerDTO(dbcustomer.CustomerID, dbcustomer.Title, dbcustomer.FirstName, dbcustomer.LastName, dbcustomer.EmailAddress, dbcustomer.MobileNumber, address);
+
+           
+
+          //  CustomerDAO customer = new CustomerDAO(dbcustomer);
+
+            // customer.addAddress(getAddresses(customer.CustomerId));
 
             return customer;
 
         }
 
-        public async Task<int> addCustomer(Customer customer, bool saveimmediate)
+        public async Task<int> addCustomer(CustomerDTO customer,bool commit)
         {
 
-            DBCustomer dbcustomer = new DBCustomer(customer);
+            Customer dbcustomer = new Customer(customer);
 
-            dbcustomer = _customerReposotory.addObject(dbcustomer);
+            dbcustomer = _customerReposotory._repository.addObject(dbcustomer);
 
-            List<CustomerAddress> addresses =  addCustomerAddress(customer.addresses, dbcustomer.CustomerId);
+            if(commit == true)
+            { 
+            _customerReposotory.Commit();
+            }
+
+            return dbcustomer.CustomerID;
+
+        }
 
  
-            if (saveimmediate)
-            {
-                _customerReposotory.saveChanges();
-            }
-           
-            return dbcustomer.CustomerId;
 
-        }
-
-        public void saveChanges()
-        {
-            _customerReposotory.saveChanges();
-        }
-
-        public async Task<List<Customer>> getAllCustomers()
+        public async Task<List<rfCustomerDTO>> getAllCustomers()
         {
             try
             {
-                List<Customer> formattedlist = new List<Customer>();
-                List<DBCustomer> dbcustomer = _customerReposotory.getAllObjects();
+                List<rfCustomerDTO> customer = new List<rfCustomerDTO>();
+                List<Customer> Customers = _customerReposotory._repository.getAllObjects();
 
-
-
-                foreach (DBCustomer customer in dbcustomer)
+                foreach (Customer cus in Customers)
                 {
-                    formattedlist.Add(new Customer(customer));
+                    customer.Add(new rfCustomerDTO(cus.CustomerID, cus.Title, cus.FirstName, cus.LastName, cus.EmailAddress, cus.MobileNumber));
                 }
 
-                return formattedlist;
+                return customer;
+
+
+                //List<Customer> formattedlist = new List<Customer>();
+                //List<Customer> dbcustomer = _customerReposotory.getAllObjects();
 
 
 
+                //foreach (Customer customer in dbcustomer)
+                //{
+                //    formattedlist.Add(new Customer(customer));
+                //}
 
+                //return formattedlist;
+
+
+                return null;
 
             }
             catch (Exception ex)
@@ -88,29 +100,29 @@ namespace OrderingAPI.AppService.Services
             }
         }
 
-        private List<CustomerAddress> getAddresses(int customerID)
-        {
+        //private List<CustomerAddressDAO> getAddresses(int customerID)
+        //{
      
 
-            return _customerAddressService.getaddressinfo(customerID);
+        //    return _customerAddressService.getaddressinfo(customerID);
 
-        }
+        //}
 
-        private List<CustomerAddress> addCustomerAddress(IEnumerable<CustomerAddress> address, int customerID)
-        {
+        //private List<CustomerAddressDAO> addCustomerAddress(IEnumerable<CustomerAddressDAO> address, int customerID)
+        //{
 
-            List<CustomerAddress> customeraddress = new List<CustomerAddress>();
-            foreach (CustomerAddress oldt in address)
-            {
+        //    List<CustomerAddressDAO> customeraddress = new List<CustomerAddressDAO>();
+        //    foreach (CustomerAddressDAO oldt in address)
+        //    {
 
-                // CustomerAddress ca = new CustomerAddress(oldt);
-                oldt.setCustomerID(customerID);
+        //        // CustomerAddress ca = new CustomerAddress(oldt);
+        //        oldt.setCustomerID(customerID);
 
-                customeraddress.Add(_customerAddressService.addCustomerAddress(oldt));
-            }
+        //        customeraddress.Add(_customerAddressService.addCustomerAddress(oldt));
+        //    }
 
-            return customeraddress;
-        }
+        //    return customeraddress;
+        //}
 
 
 

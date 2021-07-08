@@ -1,4 +1,4 @@
-﻿using OrderingAPI.Models.DAO;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,17 +15,18 @@ namespace OrderingAPI.Models.DTO
 
         public List<rOrderlineDTO> orderlines { get; private set; }
 
-        public rOrderDTO(Order order)
+        public rOrderDTO(int OrderID,int CustomerID,int OrderStatus,List<rOrderlineDTO> orderlines,decimal OrderValue)
         {
-            OrderID = order.OrderID;
-            CustomerID = order.CustomerID;
-            OrderValue = order.OrderValue;
-            OrderStatus = order.OrderStatus;
-            orderlines = new List<rOrderlineDTO>();
-            foreach (OrderLines ol in order.OrderItems)
-            {
-                orderlines.Add(new rOrderlineDTO(ol));
-            }
+            this.OrderID = OrderID;
+            this.CustomerID = CustomerID;
+            this.OrderValue = OrderValue;
+            this.OrderStatus = OrderStatus;
+            this.orderlines = orderlines;
+
+            //foreach (OrderLinesDAO ol in order.OrderItems)
+            //{
+            //    orderlines.Add(new rOrderlineDTO(ol));
+            //}
         }
     }
 }

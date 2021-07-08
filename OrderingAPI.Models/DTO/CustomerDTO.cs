@@ -1,4 +1,4 @@
-﻿using OrderingAPI.Models.DAO;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -61,22 +61,23 @@ namespace OrderingAPI.Models.DTO
         public string EmailAddress { get; private set; }
         public string MobileNumber { get; private set; }
         public List<rCustomerAddressCTO> addresses { get; private set; }
-        public rCustomerDTO(Customer customer)
+
+        public rCustomerDTO(int CustomerID,string Title,string firstname,string Lastname, string EmailAddress,string MobileNumber, List<rCustomerAddressCTO> addresses)
         {
-            customerID = customer.CustomerId;
-            Title = customer.Title;
-            FirstName = customer.FirstName;
-            LastName = customer.LastName;
-            EmailAddress = customer.EmailAddress;
-            MobileNumber = customer.MobileNumber;
+            this.customerID = CustomerID;
+            this.Title = Title;
+            this.FirstName = firstname;
+            this.LastName = Lastname;
+            this.EmailAddress = EmailAddress;
+            this.MobileNumber = MobileNumber;
 
-            addresses = new List<rCustomerAddressCTO>();
+            this.addresses = addresses;
 
 
-            foreach (CustomerAddress ca in customer.addresses)
-            {
-                addresses.Add(new rCustomerAddressCTO(ca));
-            }
+            //foreach (CustomerAddressDAO ca in customer.addresses)
+            //{
+            //    addresses.Add(new rCustomerAddressCTO(ca));
+            //}
         }
         
     }
@@ -90,15 +91,15 @@ namespace OrderingAPI.Models.DTO
         public string EmailAddress { get; private set; }
         public string MobileNumber { get; private set; }
 
-        public rfCustomerDTO(Customer customer)
+        public rfCustomerDTO(int CustomerID, string Title, string firstname, string Lastname, string EmailAddress, string MobileNumber)
         {
-            customerID = customer.CustomerId;
-            Title = customer.Title;
-            FirstName = customer.FirstName;
-            LastName = customer.LastName;
-            EmailAddress = customer.EmailAddress;
-            MobileNumber = customer.MobileNumber;
-       
+            this.customerID = CustomerID;
+            this.Title = Title;
+            this.FirstName = firstname;
+            this.LastName = Lastname;
+            this.EmailAddress = EmailAddress;
+            this.MobileNumber = MobileNumber;
+
         }
 
     }

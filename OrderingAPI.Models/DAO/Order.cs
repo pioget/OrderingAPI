@@ -5,50 +5,50 @@ using System.Linq;
 
 namespace OrderingAPI.Models.DAO
 {
-    public class Order
+    public class OrderDAO
     {
 
-        private List<OrderLines> _orderlines;
-        public ICollection<OrderLines> OrderItems { get { return _orderlines; } }
+        private List<OrderLinesDAO> _orderlines;
+        public ICollection<OrderLinesDAO> OrderItems { get { return _orderlines; } }
 
-        public Order(DBObjects.DBOrder order)
-        {
+        //public Order(DBObjects.DBOrder order)
+        //{
 
-            OrderID = order.OrderID;
-            CustomerID = order.CustomerID;
-            //OrderValue = order.OrderValue;
-            OrderStatus = order.OrderStatus;
-            DateCreated = order.DateCreated;
-            IsActive = order.IsActive;
-            DateDeactivated = order.DateDeactivated;
-            _orderlines = new List<OrderLines>();
+        //    OrderID = order.OrderID;
+        //    CustomerID = order.CustomerID;
+        //    //OrderValue = order.OrderValue;
+        //    OrderStatus = order.OrderStatus;
+        //    DateCreated = order.DateCreated;
+        //    IsActive = order.IsActive;
+        //    DateDeactivated = order.DateDeactivated;
+        //    _orderlines = new List<OrderLines>();
 
-        }
+        //}
 
-        public Order(DTO.RequestCreateOrderDTO order)
-        {
-            _orderlines = new List<OrderLines>();
-            addOrderLines(order.orderlines);
-            CustomerID = order.CustomerID;
-            DateCreated = DateTime.Now;
-            IsActive = true;
-        }
+        //public OrderDAO(DTO.RequestCreateOrderDTO order)
+        //{
+        //    _orderlines = new List<OrderLinesDAO>();
+        //    addOrderLines(order.orderlines);
+        //    CustomerID = order.CustomerID;
+        //    DateCreated = DateTime.Now;
+        //    IsActive = true;
+        //}
 
-        public Order(int customerID)
-        {
-            _orderlines = new List<OrderLines>();
-            CustomerID = customerID;
-            DateCreated = DateTime.Now;
-            IsActive = true;
-        }
+        //public OrderDAO(int customerID)
+        //{
+        //    _orderlines = new List<OrderLinesDAO>();
+        //    CustomerID = customerID;
+        //    DateCreated = DateTime.Now;
+        //    IsActive = true;
+        //}
 
-        public Order(List<DTO.AddOrderlineDTO> orderlines)
-        {
-            _orderlines = new List<OrderLines>();
-            addOrderLines(orderlines);
-            DateCreated = DateTime.Now;
-            IsActive = true;
-        }
+        //public OrderDAO(List<DTO.AddOrderlineDTO> orderlines)
+        //{
+        //    _orderlines = new List<OrderLinesDAO>();
+        //    addOrderLines(orderlines);
+        //    DateCreated = DateTime.Now;
+        //    IsActive = true;
+        //}
 
         public int OrderID { get; private set; }
         public int CustomerID { get; private set; }
@@ -58,7 +58,7 @@ namespace OrderingAPI.Models.DAO
         public bool IsActive { get; private set; }
         public DateTime DateDeactivated { get; private set; }
 
-        public void addOrderLines(List<OrderLines> orderlines)
+        public void addOrderLines(List<OrderLinesDAO> orderlines)
         {
             _orderlines = orderlines;
         }
@@ -68,7 +68,7 @@ namespace OrderingAPI.Models.DAO
         {
             foreach (DTO.AddOrderlineDTO _ol in ol)
             {
-                OrderItems.Add(new OrderLines(_ol));
+                OrderItems.Add(new OrderLinesDAO(_ol));
             }
         }
 

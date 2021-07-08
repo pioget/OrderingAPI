@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.AppService.Services;
-using OrderingAPI.Models.DAO;
+
 
 namespace OrderingAPI.Controllers
 {
@@ -27,17 +27,17 @@ namespace OrderingAPI.Controllers
         {
             try
             {
-                List<Stock> stock =  await _StockService.getStock();
+                List<Models.DTO.rStockDTO> stock =  await _StockService.getStock();
 
-                List<Models.DTO.rStockDTO> dtostock = new List<Models.DTO.rStockDTO>();
-                foreach(Stock s in stock )
-                {
-                    dtostock.Add(createreturnobject(s));
-                }
+                //List<Models.DTO.rStockDTO> dtostock = new List<Models.DTO.rStockDTO>();
+                //foreach(StockDAO s in stock )
+                //{
+                //    dtostock.Add(createreturnobject(s));
+                //}
 
                
 
-                return dtostock;
+                return stock;
             }
             catch (Exception ex)
             {
@@ -53,13 +53,13 @@ namespace OrderingAPI.Controllers
             try
             {
 
-                Stock stock = new Stock(dtostock);
+                //StockDAO stock = new StockDAO(dtostock);
 
-                
 
-                stock =  await _StockService.addStock(stock);
 
-                return stock.StockID;
+               int stockID =  await _StockService.addStock(dtostock);
+
+                return stockID;//stock.StockID;
 
             }
             catch (Exception ex)
@@ -69,9 +69,6 @@ namespace OrderingAPI.Controllers
             }
         }
 
-        private Models.DTO.rStockDTO createreturnobject(Stock stock)
-        {
-            return new Models.DTO.rStockDTO(stock);
-        }
+     
     }
 }

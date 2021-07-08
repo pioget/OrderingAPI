@@ -1,4 +1,4 @@
-﻿using OrderingAPI.Models.DAO;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,13 +35,13 @@ namespace OrderingAPI.Models.DTO
 
     public class rStockDTO : IStockSTO
     {
-        public rStockDTO(Stock stock)
+        public rStockDTO(int stockID, string ItemDescription,string SKUcode,int StockQuantity,decimal price)
         {
-            stockID = stock.StockID;
-            ItemDescritpion = stock.ItemDescritpion;
-            SKUcode = stock.SKUcode;
-            StockQuantity = stock.StockQuantity;
-            Price = stock.Price;
+            this.stockID = stockID;
+            this.ItemDescritpion = ItemDescription;
+            this.SKUcode = SKUcode;
+            this.StockQuantity = StockQuantity;
+            this.Price = price;
         }
         public int stockID { get; set; }
         public string ItemDescritpion { get; private set; }

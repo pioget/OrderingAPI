@@ -5,37 +5,37 @@ using System.Text;
 
 namespace OrderingAPI.Models.DAO
 {
-    public class Customer
+    public class CustomerDAO
     {
 
-        private List<CustomerAddress> _customerAddresses;
-        public ICollection<CustomerAddress> addresses { get { return _customerAddresses; } }
+        private List<CustomerAddressDAO> _customerAddresses;
+        public ICollection<CustomerAddressDAO> addresses { get { return _customerAddresses; } }
 
 
-        protected Customer() // For Entity Framework Core
+        protected CustomerDAO() // For Entity Framework Core
         {
-            _customerAddresses = new List<CustomerAddress>();
+            _customerAddresses = new List<CustomerAddressDAO>();
         }
 
 
 
-        public Customer(DBObjects.DBCustomer customer)
-        {
+        //public Customer(DBObjects.DBCustomer customer)
+        //{
 
-            CustomerId = customer.CustomerId;
-            Title = customer.Title;
-            FirstName = customer.FirstName;
-            LastName = customer.LastName;
-            EmailAddress = customer.EmailAddress;
-            MobileNumber = customer.MobileNumber;
-            DateCreated = customer.DateCreated;
-            IsActive = customer.IsActive;
-            DeactivatedDateTime = customer.DeactivatedDateTime;
-            CustomerTypeID = customer.CustomerTypeID;
-            _customerAddresses = new List<CustomerAddress>();
-        }
+        //    CustomerId = customer.CustomerId;
+        //    Title = customer.Title;
+        //    FirstName = customer.FirstName;
+        //    LastName = customer.LastName;
+        //    EmailAddress = customer.EmailAddress;
+        //    MobileNumber = customer.MobileNumber;
+        //    DateCreated = customer.DateCreated;
+        //    IsActive = customer.IsActive;
+        //    DeactivatedDateTime = customer.DeactivatedDateTime;
+        //    CustomerTypeID = customer.CustomerTypeID;
+        //    _customerAddresses = new List<CustomerAddress>();
+        //}
 
-        public Customer(Models.DTO.CustomerDTO customer)
+        public CustomerDAO(Models.DTO.CustomerDTO customer)
         {
 
 
@@ -48,7 +48,7 @@ namespace OrderingAPI.Models.DAO
             IsActive = true;
             DeactivatedDateTime = null;
             CustomerTypeID = 1;
-            _customerAddresses = new List<CustomerAddress>();
+            _customerAddresses = new List<CustomerAddressDAO>();
             addAddresses(customer.addresses);
         }
 
@@ -63,7 +63,7 @@ namespace OrderingAPI.Models.DAO
         public DateTime? DeactivatedDateTime { get; private set; }
         public int CustomerTypeID { get; private set; }
 
-        public void addAddress(List<CustomerAddress> addresses)
+        public void addAddress(List<CustomerAddressDAO> addresses)
         {
             _customerAddresses = addresses;
         }
@@ -73,7 +73,7 @@ namespace OrderingAPI.Models.DAO
 
             foreach(CustomerAddressDTO add in address)
             {
-                _customerAddresses.Add(new CustomerAddress(add));
+                _customerAddresses.Add(new CustomerAddressDAO(add));
             }
 
         }

@@ -4,24 +4,24 @@ using System.Text;
 
 namespace OrderingAPI.Models.DAO
 {
-    public class OrderLines
+    public class OrderLinesDAO
     {
 
-        public OrderLines(DBObjects.DBOrderLines orderline,Stock stockitem)
-        {
-            OrderLinesID = orderline.OrderLinesID;
-            OrderID = orderline.OrderID;
-            StockID = orderline.StockID;
-            Quantity = orderline.Quantity;
-            SIValue = orderline.SIValue;
-            DateCreated = orderline.DateCreated;
-            IsActive = orderline.IsActive;
-            DateDeactivated = orderline.DateDeactivated;
-            _stockitem = stockitem;
-        }
+        //public OrderLines(DBObjects.DBOrderLines orderline,Stock stockitem)
+        //{
+        //    OrderLinesID = orderline.OrderLinesID;
+        //    OrderID = orderline.OrderID;
+        //    StockID = orderline.StockID;
+        //    Quantity = orderline.Quantity;
+        //    SIValue = orderline.SIValue;
+        //    DateCreated = orderline.DateCreated;
+        //    IsActive = orderline.IsActive;
+        //    DateDeactivated = orderline.DateDeactivated;
+        //    _stockitem = stockitem;
+        //}
 
 
-        public OrderLines(DTO.AddOrderlineDTO ol)
+        public OrderLinesDAO(DTO.AddOrderlineDTO ol)
         {
             StockID = ol.StockID;
             Quantity = ol.Quantity;
@@ -42,7 +42,7 @@ namespace OrderingAPI.Models.DAO
 
 
 
-        private Stock _stockitem;
+        private StockDAO _stockitem;
 
         public void setOrderID (int orderid)
         {

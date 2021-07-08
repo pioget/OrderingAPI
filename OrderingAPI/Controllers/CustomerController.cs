@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.AppService.Services;
-using OrderingAPI.Models.DAO;
+
 using OrderingAPI.Models.DTO;
 
 namespace OrderingAPI.Controllers
@@ -17,11 +17,11 @@ namespace OrderingAPI.Controllers
       
         CustomerService _CustomerService;
 
-        string message;
 
         public CustomerController(CustomerService customerservice)
         {
             _CustomerService = customerservice;
+        
         }
 
 
@@ -31,9 +31,10 @@ namespace OrderingAPI.Controllers
         {
             try
             {
-                Customer customer =   await _CustomerService.getCustomer(customerID);
+                // CustomerDAO customer =   
+                rCustomerDTO customer =  await _CustomerService.getCustomer(customerID);
          
-                return Ok(createreturnobject(customer));
+                return Ok(customer); //createreturnobject(customer)
             }
             catch (Exception ex)
             {
@@ -49,11 +50,11 @@ namespace OrderingAPI.Controllers
             try
             {
 
-                Customer customer = new Customer(dtocustomer);
+                //CustomerDAO customer = new CustomerDAO(dtocustomer);
 
                 //_customer = await _CustomerService.addCustomer(_customer,customer.addresses,true);
 
-               int CustomerId =  await _CustomerService.addCustomer(customer, true);
+               int CustomerId =  await _CustomerService.addCustomer(dtocustomer,true);
 
                 return Ok(CustomerId);
 
@@ -70,15 +71,17 @@ namespace OrderingAPI.Controllers
         {
             try
             {
-                List<Customer> customers = await _CustomerService.getAllCustomers();
+                List<rfCustomerDTO> customers = await _CustomerService.getAllCustomers();
 
-                List<Models.DTO.rfCustomerDTO> dtocustomer = new List<Models.DTO.rfCustomerDTO>();
-                foreach (Customer c in customers)
-                {
-                    dtocustomer.Add(createflatreturnobject(c));
-                }
+                //List<Models.DTO.rfCustomerDTO> dtocustomer = new List<Models.DTO.rfCustomerDTO>();
+                //foreach (CustomerDAO c in customers)
+                //{
+                //    dtocustomer.Add(createflatreturnobject(c));
+                //}
 
-                return dtocustomer;
+                //return dtocustomer;
+
+                return customers;
             }
             catch (Exception ex)
             {
@@ -88,34 +91,21 @@ namespace OrderingAPI.Controllers
         }
 
 
-        private rCustomerDTO createreturnobject(Customer customer)
-        {
-            rCustomerDTO rdtocustomer = new rCustomerDTO(customer);
 
-            return rdtocustomer;
-        }
-        private rfCustomerDTO createflatreturnobject(Customer customer)
-        {
-            rfCustomerDTO rdtocustomer = new rfCustomerDTO(customer);
 
-            return rdtocustomer;
-        }
-
-        //[HttpGet]
-        //[Route("getCustomers")]
-        //public async Task<List<Customer>> getallCustomer()
+        //private rCustomerDTO createreturnobject(CustomerDAO customer)
         //{
-        //    try
-        //    {
-        //        Customer x = await _CustomerService.getCustomer(customerID);
+        //    rCustomerDTO rdtocustomer = new rCustomerDTO(customer);
 
-        //        return x;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //_errorLogger.Log(ex);
-        //        return null;//InternalServerError(ex);
-        //    }
+        //    return rdtocustomer;
         //}
+        //private rfCustomerDTO createflatreturnobject(CustomerDAO customer)
+        //{
+        //    rfCustomerDTO rdtocustomer = new rfCustomerDTO(customer);
+
+        //    return rdtocustomer;
+        //}
+
+
     }
 }

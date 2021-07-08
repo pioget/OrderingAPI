@@ -1,7 +1,8 @@
-﻿using OrderingAPI.Models.DAO;
-using OrderingAPI.Models.DBObjects;
+﻿
 using OrderingAPI.Models.DTO;
-using OrderingAPI.Repository.Repository;
+using OrderingAPI.Repository.EFObjects;
+using OrderingAPI.Repository.Interfaces;
+using OrderingAPI.Repository.LocalRepoistory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,97 +12,97 @@ namespace OrderingAPI.AppService.Services
 {
     public class OrderService
     {
-        private readonly IRepository<DBOrder> _orderRepositry;
+        private readonly IUnitOfWork<Order> _orderRepositry;
         private readonly OrderLinesService _orderLineService;
         private readonly CustomerService _customerService;
 
-        public OrderService(IRepository<DBOrder> orderRepositry, OrderLinesService orderLineService, CustomerService CustomerService)
+
+
+
+        public OrderService(IUnitOfWork<Order> orderRepositry, OrderLinesService orderLineService, CustomerService CustomerService)
         {
 
             _orderRepositry = orderRepositry;
             _orderLineService = orderLineService;
             _customerService = CustomerService;
+
         }
-        public async Task<Order> getOrderbyID(int id)
+        public async Task<rOrderDTO> getOrderbyID(int id)
         {
-            DBOrder dborder = _orderRepositry.getObject(id);
-            if (dborder == null)
+            Order DBorder = _orderRepositry._repository.getObject(id);
+
+            if (DBorder == null)
                 throw new Exception("Order Record not found");
 
-            Order order = new Order(dborder);
+            List<rOrderlineDTO> orderlines = await _orderLineService.getOrderlinesbyOrderID(DBorder.OrderID);
 
-            order.addOrderLines(await getOrderlines(id));
+            rOrderDTO order = new rOrderDTO(DBorder.OrderID, DBorder.CustomerID, DBorder.OrderStatus, orderlines, DBorder.OrderValue);
+
 
             return order;
         }
-        public async Task<int> addOrderByExistingCustomer(Order order)
+        public async Task<int> addOrderByExistingCustomer(RequestCreateOrderDTO order)
         {
+            try
+            {
 
-            //check to see if the customer exists
-            Customer customer = await _customerService.getCustomer(order.CustomerID);
 
-            order = await addOrder(order);
+                rCustomerDTO customer = await _customerService.getCustomer(order.CustomerID);
 
-            return order.OrderID;
+                Order dborder = new Order(order);
+
+                _orderRepositry.BeginTransasction();
+
+                Order DBorder = await addOrder(dborder);
+
+                return DBorder.OrderID;
+            }
+            catch (Exception e)
+            {
+                _orderRepositry.RollbackTransaction();
+                throw new Exception(e.Message);
+            }
         }
-        public async Task<int> addOrderByNewCustomer(Customer customer,Order order )
+        public async Task<int> addOrderByNewCustomer(RequestCreateFullOrderDTO order)
         {
+            try
+            {
+                _orderRepositry.BeginTransasction();
+                int customerID = await addCustomerForOrder(order.customerDTO);
 
-            int customerID = await addCustomerForOrder(customer);
+                Order norder = new Order(customerID, order.orderlines);
 
-            order.setcustomerID(customerID);
+                norder = await addOrder(norder);
 
-            order = await addOrder(order);
-
-            _orderRepositry.saveChanges();
-
-            return order.OrderID;
-
+                return norder.OrderID;
+            }
+            catch (Exception e)
+            {
+                _orderRepositry.RollbackTransaction();
+                throw new Exception(e.Message);
+            }
 
         }
         private async Task<Order> addOrder(Order order)
         {
-            DBOrder dborder = new DBOrder(order);
-            dborder = _orderRepositry.addObject(dborder);
 
-            Order rorder = new Order(dborder);
+            await _orderLineService.addStockItem(order.OrderLines);
 
-            rorder.addOrderLines(await addOrderLineToObject(order.OrderItems, dborder.OrderID));
+            order = _orderRepositry._repository.addObject(order);
+            _orderRepositry.Commit();
 
-            _orderRepositry.saveChanges();
-            _customerService.saveChanges();
-            _orderLineService.saveChanges();
+            return order;
 
-            return rorder;
         }
-        private async Task<int> addCustomerForOrder(Customer customer)
+        private async Task<int> addCustomerForOrder(CustomerDTO customer)
         {
-            int customerID = await _customerService.addCustomer(customer, false);
+            int customerID = await _customerService.addCustomer(customer,false);
 
             return customerID;
-        }
-        private async Task<List<OrderLines>> addOrderLineToObject(IEnumerable<OrderLines> orderline, int orderID)
-        {
-            List<OrderLines> orderlines = new List<OrderLines>();
-            foreach (OrderLines oldt in orderline)
-            {
-                oldt.setOrderID(orderID);
-
-                orderlines.Add(await _orderLineService.addOrderLine(oldt, false));
-            }
-
-            return orderlines;
-        }
-        private async Task<List<OrderLines>> getOrderlines(int orderid)
-        {
-
-            List<OrderLines> orderlines = await _orderLineService.getOrderlinesbyOrderID(orderid);
-
-
-
-            return orderlines;
 
         }
+
+
 
 
     }

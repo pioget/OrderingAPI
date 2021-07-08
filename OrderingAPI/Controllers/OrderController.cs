@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingAPI.AppService.Services;
-using OrderingAPI.Models.DAO;
+
 using OrderingAPI.Models.DTO;
 
 namespace OrderingAPI.Controllers
@@ -28,10 +28,8 @@ namespace OrderingAPI.Controllers
         {
             try
             {
-                Order order = new Order(dtoorder);
-
-                int orderID = await _OrderService.addOrderByExistingCustomer(order);
-
+                int orderID = await _OrderService.addOrderByExistingCustomer(dtoorder);
+                
                 return Ok(orderID);
 
             }
@@ -47,11 +45,9 @@ namespace OrderingAPI.Controllers
         {
             try
             {
-                Customer customer = new Customer(dtoorder.customerDTO);
+   
 
-                Order order = new Order(dtoorder.orderlines);
-
-                int orderID = await _OrderService.addOrderByNewCustomer(customer, order);
+                int orderID = await _OrderService.addOrderByNewCustomer(dtoorder);
 
                 return Ok(orderID);
 
@@ -71,9 +67,9 @@ namespace OrderingAPI.Controllers
             {
 
 
-                Order order = await _OrderService.getOrderbyID(orderid);
+                rOrderDTO order = await _OrderService.getOrderbyID(orderid);
 
-                return Ok(createreturnobject(order));
+                return Ok(order);
 
             }
             catch (Exception ex)
@@ -83,9 +79,6 @@ namespace OrderingAPI.Controllers
         }
 
 
-        private rOrderDTO createreturnobject(Order order)
-        {
-            return new rOrderDTO(order);
-        }
+ 
     }
 }

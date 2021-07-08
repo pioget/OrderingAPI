@@ -1,68 +1,75 @@
-﻿using OrderingAPI.Repository.Repository;
-using OrderingAPI.Models.DBObjects;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
-using OrderingAPI.Models.DAO;
+
 using System.Threading.Tasks;
+using OrderingAPI.Repository.LocalRepoistory;
+using OrderingAPI.Repository.EFObjects;
+using OrderingAPI.Models.DTO;
+using OrderingAPI.Repository.Interfaces;
 
 namespace OrderingAPI.AppService.Services
 {
     public class OrderLinesService
     {
-        private readonly IRepository<DBOrderLines> _orderlinesRepositry;
+        private readonly IUnitOfWork<OrderLines> _orderlinesRepositry;
+        //private readonly IRepository<OrderLines> _orderlinesRepositry;
         private readonly StockService _stockService;
 
-        public OrderLinesService(IRepository<DBOrderLines> orderlinesRepositry, StockService stockservice)
+        public OrderLinesService(IUnitOfWork<OrderLines> orderlinesRepositry, StockService stockservice)
         {
             _orderlinesRepositry = orderlinesRepositry;
             _stockService = stockservice;
         }
-        public async Task<OrderLines> addOrderLine(OrderLines orderline, bool saveimmediate)
+
+
+  
+
+        public async Task<List<rOrderlineDTO>> getOrderlinesbyOrderID(int orderID)
         {
+     
+            List<rOrderlineDTO> formattedlist = new List<rOrderlineDTO>();
+            List<OrderLines> orderlines = _orderlinesRepositry._repository.getObjects(orderID);
 
-            DBOrderLines dborderline = new DBOrderLines(orderline);
+            
 
-            dborderline.SIValue = (await _stockService.getStockbyID(dborderline.StockID)).Price;
-
-            dborderline = _orderlinesRepositry.addObject(dborderline);
-
-            orderline = new OrderLines(dborderline, null);
-
-            if (saveimmediate)
+            foreach (OrderLines ol in orderlines)
             {
-                _orderlinesRepositry.saveChanges();
-            }
-
-            return orderline;
-
-        }
-
-        public void saveChanges()
-        {
-            _orderlinesRepositry.saveChanges();
-        }
-
-        public async Task<List<OrderLines>> getOrderlinesbyOrderID(int orderID)
-        {
-
-            List<OrderLines> formattedlist = new List<OrderLines>();
-            List<DBOrderLines> dborderlines = _orderlinesRepositry.getObjects(orderID);
-
-            foreach (DBOrderLines ol in dborderlines)
-            {
-
-                formattedlist.Add(new OrderLines(ol, await getStockItem(ol.OrderLinesID)));
+                ol.setStockItem(await _stockService.getStockbyID(ol.StockID));
+                formattedlist.Add(new rOrderlineDTO(ol.OrderLinesID,ol.StockID,ol.Quantity,ol.stockName,ol.SIValue,ol.OrderLineValue));
             }
 
             return formattedlist;
 
+            //List<OrderLinesDAO> formattedlist = new List<OrderLinesDAO>();
+            //List<OrderLines> dborderlines = _orderlinesRepositry.getObjects(orderID);
+
+            //foreach (OrderLines ol in dborderlines)
+            //{
+
+            //    formattedlist.Add(new OrderLinesDAO(ol, await getStockItem(ol.OrderLinesID)));
+            //}
+
+            //return formattedlist;
+            return null;
 
         }
 
-        private async Task<Stock> getStockItem(int stockID)
+        public async Task<IEnumerable<OrderLines>> addStockItem(IEnumerable<OrderLines> OrderLines)
         {
-            return await _stockService.getStockbyID(stockID);
+
+            foreach (OrderLines ol in OrderLines)
+            {
+                Stock stock = await _stockService.getStockbyID(ol.StockID);
+                ol.setStockItem(stock);
+            }
+
+            return OrderLines;
+           
+
         }
+
+        
     }
 }

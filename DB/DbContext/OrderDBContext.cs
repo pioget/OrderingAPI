@@ -9,8 +9,15 @@ namespace Database.context
     public sealed class OrderDbContext : DbContext
     {
         public OrderDbContext(DbContextOptions<OrderDbContext> options)
-      : base(options) { }
+      : base(options) {
+
+        }
+
+
 
         public DbSet<DBOrder> Orders { get; set; }
+
+        
     }
+}
 }

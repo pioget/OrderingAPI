@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Database.context;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,13 +34,11 @@ namespace OrderingAPI
             {
 
                 var services = scope.ServiceProvider;
-                //var context = services.GetRequiredService<T>();
-
-                CustomerDataGenerator.Initialize(services);
-                CustomerAddressDataGenerator.Initialize(services);
-                StockDataGenerator.Initialize(services);
+               
+                //CustomerDataGenerator.Initialize(services);
                 //CustomerAddressDataGenerator.Initialize(services);
                 //StockDataGenerator.Initialize(services);
+              
             }
         }
 

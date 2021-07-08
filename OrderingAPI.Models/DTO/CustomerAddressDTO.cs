@@ -1,4 +1,4 @@
-﻿using OrderingAPI.Models.DAO;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,15 +36,15 @@ namespace OrderingAPI.Models.DTO
     public class rCustomerAddressCTO : ICustomerAddressCTO
     {
         public int CustomerID { get; set; }
-        public rCustomerAddressCTO(CustomerAddress address)
+        public rCustomerAddressCTO(int CustomerAddressID,int CustomerID,int AddressTypeID,string Address1,string Address2,string Town,string PostCode)
         {
-            CustomerAdressID = address.CustomerAdressID;
-            CustomerID = address.CustomerID;
-            AddressTypeID = address.AddressTypeID;
-            Address1 = address.Address1;
-            Address2 = address.Address2;
-            Town = address.Town;
-            Postcode = address.Postcode;
+            this.CustomerAdressID = CustomerAddressID;
+            this.CustomerID = CustomerID;
+            this.AddressTypeID = AddressTypeID;
+            this.Address1 = Address1;
+            this.Address2 = Address1;
+            this.Town = Address2;
+            this.Postcode = PostCode;
         }
 
         public int CustomerAdressID { get; private set; }
