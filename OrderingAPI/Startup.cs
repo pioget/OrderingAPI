@@ -18,7 +18,7 @@ using OrderingAPI.AppService.Services;
 
 using OrderingAPI.Repository.Interfaces;
 using OrderingAPI.Repository.LocalRepoistory;
-
+using static OrderingAPI.Repository.EFObjects.OrderDBContext;
 
 namespace OrderingAPI
 {
@@ -54,7 +54,7 @@ namespace OrderingAPI
             //services.AddDbContext<Models.EFObjects.OrderDBContext>();
 
             services.AddDbContext<Repository.EFObjects.OrderDBContext>(options =>
-options.UseSqlServer("Data Source=(localdb)\\NewInstance;Initial Catalog=OrderingAPI;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
+options.UseSqlServer(Configuration.GetConnectionString("appDbConnection")));
 
             //services.AddScoped<IRepository<DBCustomer>, CustomerRepository>();
             //services.AddScoped<IRepository<DBCustomerAddress>, CustomerAddressRepositry>();
@@ -93,15 +93,22 @@ options.UseSqlServer("Data Source=(localdb)\\NewInstance;Initial Catalog=Orderin
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Repository.EFObjects.OrderDBContext db)
         {
+
+            db.Database.EnsureCreated();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+               
+
+                CustomerDataGEnerator.Initialize(db);
+                StockDataGenerator.Initialize(db);
             }
             else
             {
                 app.UseHsts();
             }
-            db.Database.EnsureCreated();
+            
 
             var cultureInfo = new CultureInfo("en-GB");
             cultureInfo.NumberFormat.CurrencySymbol = "£";

@@ -13,10 +13,10 @@ namespace OrderingAPI.Repository.EFObjects
 
         }
 
-        public OrderLines(AddOrderlineDTO ol)
+        public OrderLines(int StockID,int Quantity)
         {
-            StockID = ol.StockID;
-            Quantity = ol.Quantity;
+            this.StockID = StockID;
+            this.Quantity = Quantity;
             DateCreated = DateTime.Now;
             IsActive = true;
         }

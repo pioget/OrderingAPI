@@ -52,7 +52,7 @@ namespace OrderingAPI.AppService.Services
         public async Task<int> addStock(StockDTO stock)
         {
         
-                Stock dbstock = new Stock(stock);
+                Stock dbstock = new Stock(stock.ItemDescritpion,stock.SKUcode,stock.StockQuantity,stock.Price);
 
                 dbstock =  _stockReposotory._repository.addObject(dbstock);
             _stockReposotory.Commit();

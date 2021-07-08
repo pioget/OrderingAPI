@@ -1,6 +1,8 @@
 ﻿using OrderingAPI.Models.DTO;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 
@@ -13,24 +15,26 @@ namespace OrderingAPI.Repository.EFObjects
 
         }
 
-        public Customer(Models.DTO.CustomerDTO customer)
+        public Customer(string Title, string firstname, string Lastname, string EmailAddress, string MobileNumber)
         {
 
 
-            Title = customer.Title;
-            FirstName = customer.FirstName;
-            LastName = customer.LastName;
-            EmailAddress = customer.EmailAddress;
-            MobileNumber = customer.MobileNumber;
+           this.Title = Title;
+            this.FirstName = firstname;
+            this.LastName = Lastname;
+            this.EmailAddress = EmailAddress;
+            this.MobileNumber = MobileNumber;
             DateCreated = DateTime.Now;
             IsActive = true;
             DeactivatedDateTime = null;
             CustomerTypeID = 1;
             _addresses = new HashSet<Address>();
-            addAddresses(customer.addresses);
+           // addAddresses(customer.addresses);
         }
 
 
+
+      
         public int CustomerID { get; private set; }
         public string Title { get; private set; }
         public string FirstName { get; private set; }
@@ -58,9 +62,24 @@ namespace OrderingAPI.Repository.EFObjects
 
             foreach (CustomerAddressDTO add in address)
             {
-                _addresses.Add(new Address(add));
+                _addresses.Add(new Address(add.AddressTypeID,add.Address1,add.Address2,add.Town,add.Postcode));
             }
 
+        }
+
+        private void addAddresses(List<Address> address)
+        {
+
+            foreach (Address add in address)
+            {
+                _addresses.Add(add);
+            }
+
+        }
+
+        public void addsingeladdress(Address address)
+        {
+            _addresses.Add(address);
         }
     }
 }

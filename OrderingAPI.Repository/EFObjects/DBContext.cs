@@ -1,24 +1,35 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using OrderingAPI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace OrderingAPI.Repository.EFObjects
 {
     public class OrderDBContext : DbContext
     {
-      
+
+
+
         public OrderDBContext(DbContextOptions<OrderDBContext> options) : base(options)
         {
-           
+
         }
 
         protected override void OnModelCreating
     (ModelBuilder modelBuilder)
         {
+
+
+
         }
+
+
+
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Address> CustomerAddress { get; set; }
@@ -26,55 +37,87 @@ namespace OrderingAPI.Repository.EFObjects
         public DbSet<OrderLines> Orderlines { get; set; }
         public DbSet<Stock> Stock { get; set; }
 
-        private IDbContextTransaction _transaction;
 
-        
 
-        //protected override void Seed(SchoolContext context)
-        //{
-        //    var students = new List<Student>
-        //    {
-        //    new Student{FirstMidName="Carson",LastName="Alexander",EnrollmentDate=DateTime.Parse("2005-09-01")},
-        //    new Student{FirstMidName="Meredith",LastName="Alonso",EnrollmentDate=DateTime.Parse("2002-09-01")},
-        //    new Student{FirstMidName="Arturo",LastName="Anand",EnrollmentDate=DateTime.Parse("2003-09-01")},
-        //    new Student{FirstMidName="Gytis",LastName="Barzdukas",EnrollmentDate=DateTime.Parse("2002-09-01")},
-        //    new Student{FirstMidName="Yan",LastName="Li",EnrollmentDate=DateTime.Parse("2002-09-01")},
-        //    new Student{FirstMidName="Peggy",LastName="Justice",EnrollmentDate=DateTime.Parse("2001-09-01")},
-        //    new Student{FirstMidName="Laura",LastName="Norman",EnrollmentDate=DateTime.Parse("2003-09-01")},
-        //    new Student{FirstMidName="Nino",LastName="Olivetto",EnrollmentDate=DateTime.Parse("2005-09-01")}
-        //    };
+        public sealed class StockDataGenerator
+        {
+            public static void Initialize(OrderDBContext context)
+            {
 
-        //    students.ForEach(s => context.Students.Add(s));
-        //    context.SaveChanges();
-        //    var courses = new List<Course>
-        //    {
-        //    new Course{CourseID=1050,Title="Chemistry",Credits=3,},
-        //    new Course{CourseID=4022,Title="Microeconomics",Credits=3,},
-        //    new Course{CourseID=4041,Title="Macroeconomics",Credits=3,},
-        //    new Course{CourseID=1045,Title="Calculus",Credits=4,},
-        //    new Course{CourseID=3141,Title="Trigonometry",Credits=4,},
-        //    new Course{CourseID=2021,Title="Composition",Credits=3,},
-        //    new Course{CourseID=2042,Title="Literature",Credits=4,}
-        //    };
-        //    courses.ForEach(s => context.Courses.Add(s));
-        //    context.SaveChanges();
-        //    var enrollments = new List<Enrollment>
-        //    {
-        //    new Enrollment{StudentID=1,CourseID=1050,Grade=Grade.A},
-        //    new Enrollment{StudentID=1,CourseID=4022,Grade=Grade.C},
-        //    new Enrollment{StudentID=1,CourseID=4041,Grade=Grade.B},
-        //    new Enrollment{StudentID=2,CourseID=1045,Grade=Grade.B},
-        //    new Enrollment{StudentID=2,CourseID=3141,Grade=Grade.F},
-        //    new Enrollment{StudentID=2,CourseID=2021,Grade=Grade.F},
-        //    new Enrollment{StudentID=3,CourseID=1050},
-        //    new Enrollment{StudentID=4,CourseID=1050,},
-        //    new Enrollment{StudentID=4,CourseID=4022,Grade=Grade.F},
-        //    new Enrollment{StudentID=5,CourseID=4041,Grade=Grade.C},
-        //    new Enrollment{StudentID=6,CourseID=1045},
-        //    new Enrollment{StudentID=7,CourseID=3141,Grade=Grade.A},
-        //    };
-        //    enrollments.ForEach(s => context.Enrollments.Add(s));
-        //    context.SaveChanges();
-        //}
+                // Look for any board games.
+                if (context.Stock.Count() > 0)
+                {
+                    return;   // Data was already seeded
+                }
+
+
+                context.Stock.Add(new Stock("Fancy Toilet", "FNCY1", 20, 20.99m));
+                context.SaveChanges();
+                context.Stock.Add(new Stock("Bath", "BTH1", 200, 120.99m));
+                context.SaveChanges();
+                context.Stock.Add(new Stock("Shower Head", "SWRH1", 45, 39.99m));
+                context.SaveChanges();
+                context.Stock.Add(new Stock("Toilet Seat", "TS1", 13, 9.99m));
+                context.SaveChanges();
+                context.Stock.Add(new Stock("Stuff", "STFF1", 26, 200.99m));
+                context.SaveChanges();
+
+
+                context.SaveChanges();
+            }
+
+        }
+
+        public sealed class CustomerDataGEnerator
+        {
+
+
+
+            public static void Initialize(OrderDBContext context)
+            {
+
+                // Look for any board games.
+                if (context.Customers.Count() > 0)
+                {
+                    return;   // Data was already seeded
+                }
+
+
+
+
+                Customer cus1 = new Customer("MR", "Theadore", "Loagan", "wyldstallions@gmail.com", "01254557273");
+                cus1.addsingeladdress(new Address(1, 1, "23", "Street", "Darwen", "bb3 2bw"));
+                context.Customers.Add(cus1);
+                context.SaveChanges();
+
+                Customer cus2 = new Customer("Mrs", "Charlotte", "Johnson", "cjohnson@gmail.com", "01254883344");
+                cus2.addsingeladdress(new Address(2, 1, "7", "Street", "Darwen", "bb3 2xw"));
+                context.Customers.Add(cus2);
+                context.SaveChanges();
+
+                Customer cus3 = new Customer("MR", "Elijah", "Wood", "Ewood@Ewood.com", "01254667788");
+                cus3.addsingeladdress(new Address(3, 1, "87", "Street", "Darwen", "bb3 4hg"));
+                context.Customers.Add(cus3);
+                context.SaveChanges();
+
+                Customer cus4 = new Customer("Mrs", "Olivia", "Hall", "ohall@hotmail.com", "01254776633");
+                cus4.addsingeladdress(new Address(4, 1, "23", "Street", "Darwen", "bb3 8jh"));
+                context.Customers.Add(cus4);
+                context.SaveChanges();
+
+                Customer cus5 =new Customer("MR", "James", "Johnson", "jj@yahoo.com", "01254778822");
+                cus5.addsingeladdress(new Address(5, 1, "82", "Street", "Darwen", "bb3 2gb"));
+                context.Customers.Add(cus5);
+                context.SaveChanges();
+
+
+                //CustomerAddressDataGEnerator.Initialize(context);
+
+            }
+
+         
+        }
+
+
     }
 }

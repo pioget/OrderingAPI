@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace OrderingAPI.Repository.EFObjects
@@ -10,18 +12,19 @@ namespace OrderingAPI.Repository.EFObjects
         private Stock()
         { }
 
-        public Stock(Models.DTO.StockDTO stock)
+        public Stock(string ItemDescription, string SKUcode, int StockQuantity, decimal price)
         {
 
 
-            ItemDescritpion = stock.ItemDescritpion;
-            SKUcode = stock.SKUcode;
-            StockQuantity = stock.StockQuantity;
-            Price = stock.Price;
-            DateCreated = DateTime.Now;
-            IsActive = true;
+            this.ItemDescritpion = ItemDescription;
+            this.SKUcode = SKUcode;
+            this.StockQuantity = StockQuantity;
+            this.Price = price;
+            this.DateCreated = DateTime.Now;
+            this.IsActive = true;
         }
 
+   
         public int StockID { get; private set; }
         public string ItemDescritpion { get; private set; }
         public string SKUcode { get; private set; }

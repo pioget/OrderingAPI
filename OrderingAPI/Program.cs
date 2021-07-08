@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
+using static OrderingAPI.Repository.EFObjects.OrderDBContext;
 
 namespace OrderingAPI
 {
@@ -35,8 +35,8 @@ namespace OrderingAPI
 
                 var services = scope.ServiceProvider;
                
-                //CustomerDataGenerator.Initialize(services);
-                //CustomerAddressDataGenerator.Initialize(services);
+                //CustomerDataGEnerator.Initialize(services);
+                //CustomerAddressDataGEnerator.Initialize(services);
                 //StockDataGenerator.Initialize(services);
               
             }

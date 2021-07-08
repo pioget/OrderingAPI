@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace OrderingAPI.Repository.EFObjects
@@ -12,18 +14,33 @@ namespace OrderingAPI.Repository.EFObjects
 
         }
 
-        public Address(Models.DTO.CustomerAddressDTO customeraddress)
+        public Address(int CustomerID, int AddressTypeID, string Address1, string Address2, string Town, string PostCode)
         {
-            AddressTypeID = customeraddress.AddressTypeID;
-            Address1 = customeraddress.Address1;
-            Address2 = customeraddress.Address2;
-            Town = customeraddress.Town;
-            Postcode = customeraddress.Postcode;
+            this.CustomerID = CustomerID;
+            this.AddressTypeID = AddressTypeID;
+            this.Address1 = Address1;
+            this.Address2 = Address2;
+            this.Town = Town;
+            this.Postcode = PostCode;
             IsActive = true;
             DateCreated = DateTime.Now;
             DateDeactivated = null;
 
         }
+
+        public Address( int AddressTypeID, string Address1, string Address2, string Town, string PostCode)
+        {
+            this.AddressTypeID = AddressTypeID;
+            this.Address1 = Address1;
+            this.Address2 = Address2;
+            this.Town = Town;
+            this.Postcode = PostCode;
+            IsActive = true;
+            DateCreated = DateTime.Now;
+            DateDeactivated = null;
+
+        }
+
 
         public int AddressID { get; private set; }
         public int CustomerID { get; private set; }

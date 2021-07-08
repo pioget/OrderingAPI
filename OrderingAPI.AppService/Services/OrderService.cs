@@ -49,7 +49,7 @@ namespace OrderingAPI.AppService.Services
 
                 rCustomerDTO customer = await _customerService.getCustomer(order.CustomerID);
 
-                Order dborder = new Order(order);
+                Order dborder = new Order(order.orderlines,order.CustomerID);
 
                 _orderRepositry.BeginTransasction();
 
@@ -70,7 +70,7 @@ namespace OrderingAPI.AppService.Services
                 _orderRepositry.BeginTransasction();
                 int customerID = await addCustomerForOrder(order.customerDTO);
 
-                Order norder = new Order(customerID, order.orderlines);
+                Order norder = new Order(order.orderlines, customerID);
 
                 norder = await addOrder(norder);
 

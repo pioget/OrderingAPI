@@ -22,16 +22,7 @@ namespace OrderingAPI.Repository.EFObjects
             IsActive = true;
         }
 
-        public Order(RequestCreateOrderDTO order)
-        {
-            _OrderLines = new HashSet<OrderLines>();
-            addOrderLines(order.orderlines);
-            CustomerID = order.CustomerID;
-            DateCreated = DateTime.Now;
-            IsActive = true;
-        }
-
-        public Order(int CustomerID,List<AddOrderlineDTO> orderlines)
+        public Order(List<AddOrderlineDTO> orderlines,int CustomerID)
         {
             _OrderLines = new HashSet<OrderLines>();
             addOrderLines(orderlines);
@@ -39,6 +30,8 @@ namespace OrderingAPI.Repository.EFObjects
             DateCreated = DateTime.Now;
             IsActive = true;
         }
+
+
 
         public int OrderID { get; private set; }
         public int CustomerID { get; private set; }
@@ -58,7 +51,7 @@ namespace OrderingAPI.Repository.EFObjects
         {
             foreach (AddOrderlineDTO _ol in ol)
             {
-                _OrderLines.Add(new OrderLines(_ol));
+                _OrderLines.Add(new OrderLines(_ol.StockID,_ol.Quantity));
             }
         }
 

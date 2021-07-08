@@ -47,7 +47,7 @@ namespace OrderingAPI.AppService.Services
         public async Task<int> addCustomer(CustomerDTO customer,bool commit)
         {
 
-            Customer dbcustomer = new Customer(customer);
+            Customer dbcustomer = new Customer(customer.Title,customer.FirstName,customer.LastName,customer.EmailAddress,customer.MobileNumber);
 
             dbcustomer = _customerReposotory._repository.addObject(dbcustomer);
 
